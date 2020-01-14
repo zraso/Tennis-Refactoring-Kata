@@ -1,6 +1,6 @@
 require 'minitest'
 require 'minitest/autorun'
-require_relative "tennis"
+require './lib/tennis'
 
 TEST_CASES = [
    [0, 0, "Love-All", 'player1', 'player2'],

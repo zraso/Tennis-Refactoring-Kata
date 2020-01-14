@@ -15,27 +15,50 @@ class TennisGame1
       @p2points += 1
     end
   end
+
+  def equal_scores
+    {
+      0 => "Love-All",
+      1 => "Fifteen-All",
+      2 => "Thirty-All",
+    }.fetch(@p1points, "Deuce")
+  end
+
+  def advantage
+    difference = @p1points-@p2points
+    if (difference==1)
+      "Advantage player1"
+    elsif (difference ==-1)
+      "Advantage player2"
+    end
+  end
+
+  def win
+    difference = @p1points-@p2points
+    if (difference>=2)
+      "Win for player1"
+    else
+      "Win for player2"
+    end
+  end
   
   def score
     result = ""
     tempScore=0
+    #if the players scores as equal
     if (@p1points==@p2points)
-      result = {
-          0 => "Love-All",
-          1 => "Fifteen-All",
-          2 => "Thirty-All",
-      }.fetch(@p1points, "Deuce")
+      result = equal_scores
+    #if the players scores are more than 4
     elsif (@p1points>=4 or @p2points>=4)
       minusResult = @p1points-@p2points
-      if (minusResult==1)
-        result ="Advantage player1"
-      elsif (minusResult ==-1)
-        result ="Advantage player2"
-      elsif (minusResult>=2)
-        result = "Win for player1"
+      # #and the difference in points is 1
+      if (minusResult==1) || (minusResult==-1)
+        result = advantage
+      #and the difference in points is 2
       else
-        result ="Win for player2"
+        result = win
       end
+    #if points are 3 or less
     else
       (1...3).each do |i|
         if (i==1)
