@@ -7,6 +7,10 @@ class TennisGame1
     @p1points = 0
     @p2points = 0
   end
+
+  def point_difference
+    @p1points - @p2points
+  end
         
   def won_point(playerName)
     if playerName == "player1"
@@ -25,17 +29,17 @@ class TennisGame1
   end
 
   def advantage
-    difference = @p1points-@p2points
-    if (difference==1)
+    # difference = @p1points-@p2points
+    if (point_difference==1)
       "Advantage player1"
-    elsif (difference ==-1)
+    elsif (point_difference ==-1)
       "Advantage player2"
     end
   end
 
   def win
-    difference = @p1points-@p2points
-    if (difference>=2)
+    # difference = @p1points-@p2points
+    if (point_difference>=2)
       "Win for player1"
     else
       "Win for player2"
@@ -50,9 +54,9 @@ class TennisGame1
       result = equal_scores
     #if the players scores are more than 4
     elsif (@p1points>=4 or @p2points>=4)
-      minusResult = @p1points-@p2points
+      # minusResult = @p1points-@p2points
       # #and the difference in points is 1
-      if (minusResult==1) || (minusResult==-1)
+      if (point_difference==1) || (point_difference==-1)
         result = advantage
       #and the difference in points is 2
       else
