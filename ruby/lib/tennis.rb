@@ -1,22 +1,22 @@
+require './lib/player'
 
 class TennisGame1
 
+  attr_reader :current_player
+  ## Player classes, which each store their own points and name
+  ## Where do the methods live though e.g. scores, point difference, won point, advantage, win, normal scores? In player or Game?
+
   def initialize(player1Name, player2Name)
-    @player1Name = player1Name
-    @player2Name = player2Name
-    @p1points = 0
-    @p2points = 0
+    @players = [Player.new(player1Name), Player.new(player2Name)]
   end
 
   def point_difference
-    @p1points - @p2points
+   @players.first.points - @players.last.points
   end
-        
+
   def won_point(playerName)
-    if playerName == "player1"
-      @p1points += 1
-    else
-      @p2points += 1
+    @players.each do |player| 
+      player.add_point if player.name == playerName
     end
   end
 
@@ -25,63 +25,72 @@ class TennisGame1
       0 => "Love-All",
       1 => "Fifteen-All",
       2 => "Thirty-All",
-    }.fetch(@p1points, "Deuce")
+    }.fetch(@players.first.points, "Deuce")
   end
 
   def advantage
-    # difference = @p1points-@p2points
-    if (point_difference==1)
+    if (point_difference.positive?)
       "Advantage player1"
-    elsif (point_difference ==-1)
+    else
       "Advantage player2"
     end
   end
 
   def win
-    # difference = @p1points-@p2points
-    if (point_difference>=2)
+    if (point_difference.positive?)
       "Win for player1"
     else
       "Win for player2"
     end
   end
+
+  def normal_scores
+    result = []
+    @players.each do |player|
+      result << {
+        0 => "Love",
+        1 => "Fifteen",
+        2 => "Thirty",
+        3 => "Forty",
+      }[player.points]
+    end
+
+    result.join("-")
+  end
   
   def score
-    result = ""
-    tempScore=0
-    #if the players scores as equal
-    if (@p1points==@p2points)
-      result = equal_scores
-    #if the players scores are more than 4
-    elsif (@p1points>=4 or @p2points>=4)
-      # minusResult = @p1points-@p2points
-      # #and the difference in points is 1
-      if (point_difference==1) || (point_difference==-1)
-        result = advantage
-      #and the difference in points is 2
-      else
-        result = win
-      end
-    #if points are 3 or less
+    if players_equal?
+      equal_scores
+    elsif advantage?
+      advantage
+    elsif win?
+      win
     else
-      (1...3).each do |i|
-        if (i==1)
-          tempScore = @p1points
-        else
-          result+="-"
-          tempScore = @p2points
-        end
-        result += {
-            0 => "Love",
-            1 => "Fifteen",
-            2 => "Thirty",
-            3 => "Forty",
-        }[tempScore]
-      end
+      normal_scores
     end
-    result
   end
 end
+
+def players_equal?
+  @players.first.points==@players.last.points
+end
+
+def players_equal?
+  @players.first.points==@players.last.points
+end
+
+def advantage?
+  over_four_points? && ((point_difference==1) || (point_difference==-1))
+end
+
+def win?
+  over_four_points? && ((point_difference>=2) || (point_difference<=-2))
+end
+
+def over_four_points?
+  @players.first.points>=4 or @players.last.points>=4
+end
+
 
 class TennisGame2
   def initialize(player1Name, player2Name)
